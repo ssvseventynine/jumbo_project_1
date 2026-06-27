@@ -31,19 +31,16 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # 5. Connect to your private Azure Container Registry
+    # 5. Log in to your private Azure Container Registry using the Azure CLI
     - name: Azure Container Registry Login
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.AZURE_CLIENT_ID }}
-        password: ${{ secrets.AZURE_CLIENT_SECRET }}
+      run: |
+        az acr login --name acrjumbosidhant
 
-    # 6. Read the Dockerfile, manufacture the image, and upload it to ACR
+    # 6. Manufacture the Docker image and upload it to ACR
     - name: Build and Push Docker Image to ACR
       run: |
-        docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/inventory-app:latest .
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/inventory-app:latest
+        docker build -t acrjumbosidhant.azurecr.io/inventory-app:latest .
+        docker push acrjumbosidhant.azurecr.io/inventory-app:latest
 
     # 7. Connect to your AKS Kubernetes Cluster
     - name: Set AKS Context
