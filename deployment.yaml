@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-app-deployment
+  labels:
+    app: inventory-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-app
+  template:
+    metadata:
+      labels:
+        app: inventory-app
+    spec:
+      containers:
+      - name: inventory-app-container
+        image: acrjumbosidhant.azurecr.io/inventory-app:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql-jumbo-sidhant.mysql.database.azure.com:3306/inventory?useSSL=true&requireSSL=true
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "dbadmin"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "SecurePass123!"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-app-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: inventory-app
