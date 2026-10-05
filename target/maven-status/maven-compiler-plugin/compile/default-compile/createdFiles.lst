@@ -1,0 +1,4 @@
+com\boot\jumbo\repository\ProductRepository.class
+com\boot\jumbo\model\Product.class
+com\boot\jumbo\controller\ProductController.class
+com\boot\jumbo\JpOneApplication.class
